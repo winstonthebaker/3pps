@@ -19,5 +19,5 @@ public partial class ControllerSM_Base : StateMachineNode<ControllerSMContext>
 public struct ControllerSMContext
 {
     public PhysicsCharacterController Controller;
-    public ShapeCast3D GroundCheck;
+    public GroundEvaluator GroundCheck;
 }

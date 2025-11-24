@@ -6,7 +6,7 @@
 [ext_resource type="Shape3D" uid="uid://bt5m8conmcqcv" path="res://Features/Player/Controller/player_collision_shape.tres" id="3_w4d3m"]
 [ext_resource type="Shape3D" uid="uid://dcxuadqbacyqd" path="res://Features/Player/Controller/ground_check_collision_shape.tres" id="4_w4d3m"]
 [ext_resource type="Script" uid="uid://befggvhu7s5xv" path="res://Features/Player/Controller/StateMachine/ControllerSM_Base.cs" id="5_8pgso"]
-[ext_resource type="Script" uid="uid://dopqqajubwtw3" path="res://Features/Player/Controller/StateMachine/ControllerSM_EvaluateGround.cs" id="6_ptm0q"]
+[ext_resource type="Script" uid="uid://b30a6yqgvgqv4" path="res://Features/Player/Controller/GroundEvaluator.cs" id="5_s4qf7"]
 [ext_resource type="Script" uid="uid://d0hekqt4m2yvs" path="res://Features/Player/Controller/StateMachine/ControllerSM_GroundMovement.cs" id="7_s4qf7"]
 [ext_resource type="Script" uid="uid://l0q8m8b5kaol" path="res://Features/Player/Controller/StateMachine/ControllerSM_AirMovement.cs" id="8_s4qf7"]
 
@@ -45,21 +45,17 @@ mesh = SubResource("CapsuleMesh_8pgso")
 [node name="GroundCheck" type="ShapeCast3D" parent="Player"]
 shape = ExtResource("4_w4d3m")
 target_position = Vector3(0, -1.25, 0)
+script = ExtResource("5_s4qf7")
 
 [node name="ControllerStateMachine" type="Node" parent="Player"]
 script = ExtResource("5_8pgso")
-ActivateAutomaticallyStates = Array[NodePath]([NodePath("GroundEvaluation")])
+ActivateAutomaticallyStates = Array[NodePath]([NodePath("GroundMovement")])
 
-[node name="GroundEvaluation" type="Node" parent="Player/ControllerStateMachine"]
-script = ExtResource("6_ptm0q")
-GroundMovementStatePath = NodePath("GroundMovement")
-AirMovementStatePath = NodePath("AirMovement")
-
-[node name="GroundMovement" type="Node" parent="Player/ControllerStateMachine/GroundEvaluation"]
+[node name="GroundMovement" type="Node" parent="Player/ControllerStateMachine"]
 script = ExtResource("7_s4qf7")
 _maxMoveSpeed = 10.0
 
-[node name="AirMovement" type="Node" parent="Player/ControllerStateMachine/GroundEvaluation"]
+[node name="AirMovement" type="Node" parent="Player/ControllerStateMachine"]
 script = ExtResource("8_s4qf7")
 
 [node name="Playground_01" parent="." instance=ExtResource("2_ayiw4")]

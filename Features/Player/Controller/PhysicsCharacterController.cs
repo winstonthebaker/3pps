@@ -15,7 +15,7 @@ public partial class PhysicsCharacterController : RigidBody3D
         ControllerSMContext context = new ControllerSMContext
         {
             Controller = this,
-            GroundCheck = GetNode<ShapeCast3D>("GroundCheck")
+            GroundCheck = GetNode<GroundEvaluator>("GroundCheck")
         };
         _stateMachine.SetContext(context);
 
