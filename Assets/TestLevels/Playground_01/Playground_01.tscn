@@ -5,10 +5,8 @@
 [ext_resource type="Script" uid="uid://c7pjgsbulkqnn" path="res://Features/Player/Camera/CameraScroll.cs" id="2_cq150"]
 [ext_resource type="Shape3D" uid="uid://bt5m8conmcqcv" path="res://Features/Player/Controller/player_collision_shape.tres" id="3_w4d3m"]
 [ext_resource type="Shape3D" uid="uid://dcxuadqbacyqd" path="res://Features/Player/Controller/ground_check_collision_shape.tres" id="4_w4d3m"]
-[ext_resource type="Script" uid="uid://befggvhu7s5xv" path="res://Features/Player/Controller/StateMachine/ControllerSM_Base.cs" id="5_8pgso"]
-[ext_resource type="Script" uid="uid://b30a6yqgvgqv4" path="res://Features/Player/Controller/GroundEvaluator.cs" id="5_s4qf7"]
-[ext_resource type="Script" uid="uid://d0hekqt4m2yvs" path="res://Features/Player/Controller/StateMachine/ControllerSM_GroundMovement.cs" id="7_s4qf7"]
-[ext_resource type="Script" uid="uid://l0q8m8b5kaol" path="res://Features/Player/Controller/StateMachine/ControllerSM_AirMovement.cs" id="8_s4qf7"]
+[ext_resource type="PackedScene" uid="uid://dky5jih4cdc3r" path="res://Assets/Chest.glb" id="6_8pgso"]
+[ext_resource type="PackedScene" uid="uid://c7ugmj4657hbk" path="res://Assets/box_2.tscn" id="7_jrmwj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cq150"]
 friction = 0.0
@@ -20,6 +18,13 @@ albedo_color = Color(0.364087, 0.609031, 0.356023, 1)
 material = SubResource("StandardMaterial3D_w4d3m")
 height = 1.5
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_s4qf7"]
+radius = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_hxbwm"]
+radius = 2.0
+height = 4.0
+
 [node name="Node3D" type="Node3D"]
 
 [node name="Player" type="RigidBody3D" parent="."]
@@ -28,6 +33,7 @@ axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 physics_material_override = SubResource("PhysicsMaterial_cq150")
+gravity_scale = 0.0
 script = ExtResource("1_cq150")
 
 [node name="CameraContainer" type="Node3D" parent="Player"]
@@ -35,6 +41,9 @@ script = ExtResource("2_cq150")
 
 [node name="Camera3D" type="Camera3D" parent="Player/CameraContainer"]
 transform = Transform3D(1, 0, 0, 0, 0.934148, 0.356885, 0, -0.356885, 0.934148, 0, 1.86481, 3.842)
+
+[node name="InteractCheck" type="RayCast3D" parent="Player/CameraContainer"]
+target_position = Vector3(0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = ExtResource("3_w4d3m")
@@ -44,22 +53,32 @@ mesh = SubResource("CapsuleMesh_8pgso")
 
 [node name="GroundCheck" type="ShapeCast3D" parent="Player"]
 shape = ExtResource("4_w4d3m")
-target_position = Vector3(0, -1.25, 0)
-script = ExtResource("5_s4qf7")
+target_position = Vector3(0, -4, 0)
 
-[node name="ControllerStateMachine" type="Node" parent="Player"]
-script = ExtResource("5_8pgso")
-ActivateAutomaticallyStates = Array[NodePath]([NodePath("GroundMovement")])
+[node name="DirectionalCheck" type="RayCast3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5707085, 0.29081112)
+target_position = Vector3(0, -3, 3)
 
-[node name="GroundMovement" type="Node" parent="Player/ControllerStateMachine"]
-script = ExtResource("7_s4qf7")
-_maxMoveSpeed = 10.0
-
-[node name="AirMovement" type="Node" parent="Player/ControllerStateMachine"]
-script = ExtResource("8_s4qf7")
+[node name="ClickController" type="Node3D" parent="Player"]
 
 [node name="Playground_01" parent="." instance=ExtResource("2_ayiw4")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.989841, 0.0981667, 0.102851, -0.14218, 0.683426, 0.71604, 9.65859e-09, -0.723389, 0.690441, 0, 0, 0)
 shadow_enabled = true
+
+[node name="Ball" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4264977, 2.8555074)
+mass = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball"]
+shape = SubResource("SphereShape3D_s4qf7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball"]
+mesh = SubResource("SphereMesh_hxbwm")
+
+[node name="Chest" parent="." instance=ExtResource("6_8pgso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.409283, 0, 2.9453282)
+
+[node name="Box2" parent="." instance=ExtResource("7_jrmwj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.863588, -4.7683716e-07, 8.007785)

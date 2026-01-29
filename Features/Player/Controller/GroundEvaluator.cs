@@ -63,7 +63,7 @@ public partial class GroundEvaluator : ShapeCast3D
 
 	public void Update()
 	{
-		GetGroundingInfo();
+		//GetGroundingInfo();
 	}
 	
 
